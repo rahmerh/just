@@ -1,6 +1,8 @@
-use clap::{Parser, Subcommand};
+use std::{env, path::PathBuf};
 
-use crate::commands::build::Build;
+use clap::{Args, Parser, Subcommand};
+
+use crate::{commands::build::Build, config::Config};
 
 #[derive(Subcommand)]
 pub enum Command {
@@ -12,15 +14,33 @@ pub enum Command {
 #[command(name = "just", version, about = "Java project manager written in rust")]
 pub struct Cli {
     #[command(subcommand)]
-    pub command: Option<Command>,
+    command: Command,
+
+    #[command(flatten)]
+    global: GlobalArgs,
+}
+
+#[derive(Args, Debug)]
+struct GlobalArgs {
+    /// Optional path to project root
+    #[arg(short, long, global = true)]
+    path: Option<PathBuf>,
 }
 
 impl Cli {
     pub fn run(&self) -> anyhow::Result<()> {
-        match &self.command {
-            Some(Command::Build(cmd)) => cmd.run(),
+        let run_in = match &self.global.path {
+            Some(p) => p,
+            None => &env::current_dir()?,
+        };
 
-            None => todo!(),
+        let config = match Config::load() {
+            Ok(c) => c,
+            Err(_) => Config::initialize_in(run_in)?,
+        };
+
+        match &self.command {
+            Command::Build(cmd) => cmd.run(run_in, config)?,
         }
 
         Ok(())
