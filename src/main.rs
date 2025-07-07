@@ -5,6 +5,7 @@ use crate::cli::Cli;
 
 mod cli;
 mod commands;
+mod config;
 
 fn main() {
     env_logger::init();
