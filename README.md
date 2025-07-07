@@ -2,7 +2,7 @@
   <img src="assets/banner.png" alt="Just a banner" width="100%" />
 </p>
 
-[![Build Status](https://github.com/rahmerh/just/actions/workflows/ci.yml/badge.svg)](https://github.com/rahmerh/just/actions/workflows/ci.yml)
+[![Build](https://github.com/rahmerh/just/actions/workflows/ci.yaml/badge.svg)](https://github.com/rahmerh/just/actions/workflows/ci.yaml)
 
 A java project management tool designed for efficiency. No bloat, no mess, just run the damn thing.
 
